@@ -34,10 +34,11 @@ class JokerSkill(MycroftSkill):
     def handle_screenshot(self):
         try:
             today = date.today().strftime("%d/%m/%Y %H:%M:%S")
-            filename = f"${today} JarvisScreen.png"
+            filename = f"{today} JarvisScreen.png"
+            filepath = f"{self.screenshot_dir}/{filename}"
 
             my_screenshot = pyautogui.screenshot()
-            file = my_screenshot.save(filename)
+            file = my_screenshot.save(filepath)
             pyclip.copy(file)
             self.speak("Saved and copied")
         except NotImplementedError:
