@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from os import path, mkdir
 from os.path import expanduser
 from datetime import date
 
@@ -25,6 +26,8 @@ import pyclip
 class JokerSkill(MycroftSkill):
     def __init__(self):
         self.screenshot_dir = expanduser("~/Pictures")
+        if not path.exists(self.screenshot_dir):
+            mkdir(self.screenshot_dir)
         super(JokerSkill, self).__init__(name="JokerSkill")
 
     def bad_boy(self):
@@ -33,15 +36,17 @@ class JokerSkill(MycroftSkill):
     @intent_handler(IntentBuilder("ScreenshotIntent").require("Screenshot"))
     def handle_screenshot(self):
         try:
-            today = date.today().strftime("%d/%m/%Y %H:%M:%S")
+            today = date.today().strftime("%d-%m-%Y_%H:%M:%S")
             filename = f"{today} JarvisScreen.png"
             filepath = f"{self.screenshot_dir}/{filename}"
 
             my_screenshot = pyautogui.screenshot()
-            file = my_screenshot.save(filepath)
-            pyclip.copy(file)
-            self.speak("Saved and copied")
-        except (NotImplementedError, FileNotFoundError):
+            my_screenshot.save(filepath)
+            # TODO: Better don't kill after CTRL+v EVERYTHING
+            # pyclip.copy(open(filepath, 'rb').read())
+            self.speak("Saved")
+        except NotImplementedError as e:
+            print(e)
             self.bad_boy()
 
     def stop(self):
