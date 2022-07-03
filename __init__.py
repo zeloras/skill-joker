@@ -12,43 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from os.path import dirname, join
+from os.path import expanduser
+from datetime import date
 
-import pyjokes
+import pyautogui
 
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import MycroftSkill, intent_handler
-from random import choice
+import pyclip
 
 
-joke_types = ['chuck', 'neutral']
-
-
-class JokingSkill(MycroftSkill):
+class JokerSkill(MycroftSkill):
     def __init__(self):
-        super(JokingSkill, self).__init__(name="JokingSkill")
+        self.screenshot_dir = expanduser("~/Pictures")
+        super(JokerSkill, self).__init__(name="JokerSkill")
 
-    def speak_joke(self, lang, category):
-        self.speak(pyjokes.get_joke(language=lang, category=category))
+    @intent_handler(IntentBuilder("ScreenshotIntent").require("Screenshot"))
+    def handle_screenshot(self):
+        today = date.today().strftime("%d/%m/%Y %H:%M:%S")
+        filename = f"${today} JarvisScreen.png"
 
-    @intent_handler(IntentBuilder("JokingIntent").require("Joke"))
-    def handle_general_joke(self, message):
-        selected = choice(joke_types)
-        self.speak_joke(self.lang[:-3], selected)
-
-    @intent_handler(IntentBuilder("ChuckJokeIntent").require("Joke")
-                    .require("Chuck"))
-    def handle_chuck_joke(self, message):
-        self.speak_joke(self.lang[:-3], 'chuck')
-
-    @intent_handler(IntentBuilder("NeutralJokeIntent").require("Joke")
-                    .require("Neutral"))
-    def handle_neutral_joke(self, message):
-        self.speak_joke(self.lang[:-3], 'neutral')
+        my_screenshot = pyautogui.screenshot()
+        file = my_screenshot.save(filename)
+        pyclip.copy(file)
+        self.speak("Saved and copied")
 
     def stop(self):
         pass
 
 
 def create_skill():
-    return JokingSkill()
+    return JokerSkill()

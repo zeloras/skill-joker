@@ -1,9 +1,0 @@
-{
-  "utterance": "tell me a chuck norris joke",
-  "intent_type": "ChuckJokeIntent",
-  "intent": {
-    "Joke": "joke",
-    "Chuck": "chuck norris"
-  },
-  "expected_response": ".*([Cc]huck|[nN]orris).*"
-}

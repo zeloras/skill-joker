@@ -1,7 +1,7 @@
 {
-  "utterance": "give me a joke",
-  "intent_type": "JokingIntent",
+  "utterance": "give me a fun",
+  "intent_type": "ScreenshotIntent",
   "intent": {
-    "Joke": "joke"
+    "Screenshot": "screenshot"
   }
 }
