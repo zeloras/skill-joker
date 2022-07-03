@@ -41,7 +41,7 @@ class JokerSkill(MycroftSkill):
             file = my_screenshot.save(filepath)
             pyclip.copy(file)
             self.speak("Saved and copied")
-        except NotImplementedError:
+        except (NotImplementedError, FileNotFoundError):
             self.bad_boy()
 
     def stop(self):
