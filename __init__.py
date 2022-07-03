@@ -27,15 +27,21 @@ class JokerSkill(MycroftSkill):
         self.screenshot_dir = expanduser("~/Pictures")
         super(JokerSkill, self).__init__(name="JokerSkill")
 
+    def bad_boy(self):
+        self.speak("I am shit myself, check my shit")
+
     @intent_handler(IntentBuilder("ScreenshotIntent").require("Screenshot"))
     def handle_screenshot(self):
-        today = date.today().strftime("%d/%m/%Y %H:%M:%S")
-        filename = f"${today} JarvisScreen.png"
+        try:
+            today = date.today().strftime("%d/%m/%Y %H:%M:%S")
+            filename = f"${today} JarvisScreen.png"
 
-        my_screenshot = pyautogui.screenshot()
-        file = my_screenshot.save(filename)
-        pyclip.copy(file)
-        self.speak("Saved and copied")
+            my_screenshot = pyautogui.screenshot()
+            file = my_screenshot.save(filename)
+            pyclip.copy(file)
+            self.speak("Saved and copied")
+        except NotImplementedError:
+            self.bad_boy()
 
     def stop(self):
         pass
